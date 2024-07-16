@@ -1,17 +1,19 @@
 package main
 
 import (
-	"fmt"
+	"bufio"
+	"os"
 	"strconv"
+	"strings"
 )
 
 const (
-	nope     = "В римской системе числа только до X включительно."
+	nope     = "В римской системе числа только от I до X включительно."
 	differen = "используются одновременно разные системы счисления"
 	negative = "в римской системе нет отрицательных чисел."
 	zero     = "на ноль делить нельзя"
 	NotMath  = "так как строка не является математической операцией."
-	ranges   = "калькулятор принимает только значения от 0 до 10."
+	ranges   = "калькулятор принимает только значения от 1 до 10."
 )
 
 func romanToInt(s string) int {
@@ -58,7 +60,18 @@ func main() {
 	for {
 		var x, y, z string
 		var q int
-		fmt.Scanf("%s %s %s", &x, &z, &y)
+		var input string
+		scanner := bufio.NewScanner(os.Stdin)
+		scanner.Scan()
+		input = scanner.Text()
+		fields := strings.Fields(input)
+		if len(fields) != 3 {
+			panic(NotMath)
+		}
+
+		x = fields[0]
+		z = fields[1]
+		y = fields[2]
 
 		a, err := strconv.Atoi(x)
 		if err != nil {
@@ -73,16 +86,26 @@ func main() {
 		}
 		{
 		}
+		if a < 1 || a > 10 {
+			panic(ranges)
+		}
+		{
+		}
+		if b < 1 || b > 10 {
+			panic(ranges)
+		}
+		{
+		}
 		if romanToInt(x) != 0 && romanToInt(y) == 0 || romanToInt(x) == 0 && romanToInt(y) != 0 {
 			panic(differen)
 		} else {
 			if romanToInt(x) != 0 && romanToInt(y) != 0 {
-				if romanToInt(x) < 0 || romanToInt(x) > 10 {
+				if romanToInt(x) < 1 || romanToInt(x) > 10 {
 					panic(ranges)
 				}
 				{
 				}
-				if romanToInt(y) < 0 || romanToInt(y) > 10 {
+				if romanToInt(y) < 1 || romanToInt(y) > 10 {
 					panic(ranges)
 				}
 				{
@@ -126,6 +149,9 @@ func main() {
 							panic(zero)
 						} else {
 							q = a / b
+							if q == 0 {
+								panic(nope)
+							}
 							println(intToRoman(q))
 						}
 					}
@@ -154,7 +180,7 @@ func main() {
 
 				case "-":
 					{
-						q = b - a
+						q = a - b
 						println(q)
 					}
 
